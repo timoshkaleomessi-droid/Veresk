@@ -1,0 +1,10 @@
+const fs=require('node:fs');
+const people=JSON.parse(fs.readFileSync('dist/people.json','utf8'));
+const escape=s=>s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('"','&quot;');
+const rows=people.map((p,i)=>`<article class="person"><span class="person-number">${String(i+1).padStart(2,'0')}</span><div><h4>${escape(p.name)}</h4>${p.detail?`<p>${escape(p.detail)}</p>`:''}</div><time datetime="${p.date.split('.').reverse().join('-')}">${p.date}</time></article>`).join('\n');
+let html=fs.readFileSync('dist/index.html','utf8').replace(/<div id="people-list" class="people-list">[\s\S]*?<\/div><!-- archive-end -->/,`<div id="people-list" class="people-list">${rows}</div><!-- archive-end -->`);
+html=html.replace('<div id="people-list" class="people-list"></div>',`<div id="people-list" class="people-list">${rows}</div><!-- archive-end -->`);
+html=html.replaceAll('<span>®</span>','').replace('</section></main>','</section>').replace('<footer>','</main><footer>');
+html=html.replace('<button class="nav-order" data-order>Обсудить проект <span>↗</span></button>','<a class="nav-order" href="https://t.me/IlyaVeresk" target="_blank" rel="noopener noreferrer">Обсудить проект <span>↗</span></a>').replace('<button class="button" data-order>Создать свою скульптуру</button>','<a class="button" href="https://t.me/IlyaVeresk" target="_blank" rel="noopener noreferrer">Создать свою скульптуру</a>');
+fs.writeFileSync('dist/index.html',html);
+console.log(`Rendered ${people.length} archive records.`);

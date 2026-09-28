@@ -1,0 +1,20 @@
+const menuButton=document.querySelector('.menu-toggle');
+menuButton.addEventListener('click',()=>{const open=menuButton.getAttribute('aria-expanded')!=='true';menuButton.setAttribute('aria-expanded',String(open));menuButton.setAttribute('aria-label',open?'Закрыть меню':'Открыть меню');document.querySelector('#nav-links').classList.toggle('open',open)});
+document.querySelectorAll('#nav-links a').forEach(a=>a.addEventListener('click',()=>{menuButton.setAttribute('aria-expanded','false');document.querySelector('#nav-links').classList.remove('open')}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){menuButton.setAttribute('aria-expanded','false');menuButton.setAttribute('aria-label','Открыть меню');document.querySelector('#nav-links').classList.remove('open')}});
+const search=document.querySelector('#people-search'),showAll=document.querySelector('#show-all'),rows=[...document.querySelectorAll('.person')];
+let expanded=false;
+const normalize=value=>value.toLocaleLowerCase('ru').replaceAll('ё','е').trim();
+function filterPeople(){const query=normalize(search.value);let count=0;rows.forEach((row,i)=>{const matches=normalize(row.textContent).includes(query);if(matches)count++;row.hidden=!(matches&&(query||expanded||i<8))});document.querySelector('#archive-count').textContent=query?`Найдено: ${count} из ${rows.length}`:`${rows.length} записей · 2016–2026`;document.querySelector('#no-results').hidden=count!==0;showAll.hidden=!!query;showAll.setAttribute('aria-expanded',String(expanded));showAll.innerHTML=expanded?'Свернуть архив <span>−</span>':`Все ${rows.length} записей <span>+</span>`}
+search.addEventListener('input',filterPeople);
+showAll.addEventListener('click',()=>{expanded=!expanded;filterPeople();if(!expanded)document.querySelector('.archive-top').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'})});
+filterPeople();
+document.querySelector('#year').textContent=new Date().getFullYear();
+const gallery=document.querySelector('.photo-gallery');
+document.querySelector('.gallery-prev').addEventListener('click',()=>gallery.scrollBy({left:-gallery.clientWidth*.85,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'}));
+document.querySelector('.gallery-next').addEventListener('click',()=>gallery.scrollBy({left:gallery.clientWidth*.85,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'}));
+const dialog=document.querySelector('#photo-dialog');
+document.querySelectorAll('[data-photo]').forEach(link=>link.addEventListener('click',event=>{if(typeof dialog.showModal!=='function')return;event.preventDefault();document.querySelector('#large-photo').src=link.href;document.querySelector('#large-photo').alt=link.querySelector('img').alt;document.querySelector('#photo-caption').textContent=link.closest('figure').querySelector('figcaption span').textContent;dialog.showModal();document.body.classList.add('modal-open')}));
+document.querySelector('.close-photo').addEventListener('click',()=>dialog.close());
+dialog.addEventListener('click',event=>{if(event.target===dialog)dialog.close()});
+dialog.addEventListener('close',()=>document.body.classList.remove('modal-open'));
