@@ -1,20 +1,64 @@
-const menuButton=document.querySelector('.menu-toggle');
-menuButton.addEventListener('click',()=>{const open=menuButton.getAttribute('aria-expanded')!=='true';menuButton.setAttribute('aria-expanded',String(open));menuButton.setAttribute('aria-label',open?'Закрыть меню':'Открыть меню');document.querySelector('#nav-links').classList.toggle('open',open)});
-document.querySelectorAll('#nav-links a').forEach(a=>a.addEventListener('click',()=>{menuButton.setAttribute('aria-expanded','false');document.querySelector('#nav-links').classList.remove('open')}));
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){menuButton.setAttribute('aria-expanded','false');menuButton.setAttribute('aria-label','Открыть меню');document.querySelector('#nav-links').classList.remove('open')}});
-const search=document.querySelector('#people-search'),showAll=document.querySelector('#show-all'),rows=[...document.querySelectorAll('.person')];
-let expanded=false;
-const normalize=value=>value.toLocaleLowerCase('ru').replaceAll('ё','е').trim();
-function filterPeople(){const query=normalize(search.value);let count=0;rows.forEach((row,i)=>{const matches=normalize(row.textContent).includes(query);if(matches)count++;row.hidden=!(matches&&(query||expanded||i<8))});document.querySelector('#archive-count').textContent=query?`Найдено: ${count} из ${rows.length}`:`${rows.length} записей · 2016–2026`;document.querySelector('#no-results').hidden=count!==0;showAll.hidden=!!query;showAll.setAttribute('aria-expanded',String(expanded));showAll.innerHTML=expanded?'Свернуть архив <span>−</span>':`Все ${rows.length} записей <span>+</span>`}
-search.addEventListener('input',filterPeople);
-showAll.addEventListener('click',()=>{expanded=!expanded;filterPeople();if(!expanded)document.querySelector('.archive-top').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'})});
-filterPeople();
-document.querySelector('#year').textContent=new Date().getFullYear();
-const gallery=document.querySelector('.photo-gallery');
-document.querySelector('.gallery-prev').addEventListener('click',()=>gallery.scrollBy({left:-gallery.clientWidth*.85,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'}));
-document.querySelector('.gallery-next').addEventListener('click',()=>gallery.scrollBy({left:gallery.clientWidth*.85,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'}));
-const dialog=document.querySelector('#photo-dialog');
-document.querySelectorAll('[data-photo]').forEach(link=>link.addEventListener('click',event=>{if(typeof dialog.showModal!=='function')return;event.preventDefault();document.querySelector('#large-photo').src=link.href;document.querySelector('#large-photo').alt=link.querySelector('img').alt;document.querySelector('#photo-caption').textContent=link.closest('figure').querySelector('figcaption span').textContent;dialog.showModal();document.body.classList.add('modal-open')}));
-document.querySelector('.close-photo').addEventListener('click',()=>dialog.close());
-dialog.addEventListener('click',event=>{if(event.target===dialog)dialog.close()});
-dialog.addEventListener('close',()=>document.body.classList.remove('modal-open'));
+const header = document.querySelector('.site-header');
+const triggers = [...document.querySelectorAll('[data-menu]')];
+let closeTimer;
+
+function openMenu(name) {
+  clearTimeout(closeTimer);
+  header.dataset.open = name;
+  triggers.forEach(button => button.setAttribute('aria-expanded', String(button.dataset.menu === name)));
+}
+function closeMenu(delay = 0) {
+  clearTimeout(closeTimer);
+  closeTimer = setTimeout(() => {
+    header.dataset.open = '';
+    triggers.forEach(button => button.setAttribute('aria-expanded', 'false'));
+  }, delay);
+}
+triggers.forEach(button => {
+  button.addEventListener('mouseenter', () => openMenu(button.dataset.menu));
+  button.addEventListener('focus', () => openMenu(button.dataset.menu));
+  button.addEventListener('click', () => header.dataset.open === button.dataset.menu ? closeMenu() : openMenu(button.dataset.menu));
+});
+header.addEventListener('mouseenter', () => clearTimeout(closeTimer));
+header.addEventListener('mouseleave', () => closeMenu(140));
+document.querySelector('.menu-scrim')?.addEventListener('click', () => closeMenu());
+
+const mobileToggle = document.querySelector('.mobile-toggle');
+mobileToggle.addEventListener('click', () => {
+  const open = !header.classList.contains('mobile-open');
+  header.classList.toggle('mobile-open', open);
+  document.body.classList.toggle('menu-open', open);
+  mobileToggle.setAttribute('aria-expanded', String(open));
+  mobileToggle.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+});
+document.querySelectorAll('.mobile-menu a').forEach(link => link.addEventListener('click', () => {
+  header.classList.remove('mobile-open'); document.body.classList.remove('menu-open');
+}));
+document.addEventListener('keydown', event => {
+  if (event.key !== 'Escape') return;
+  closeMenu(); header.classList.remove('mobile-open'); document.body.classList.remove('menu-open');
+  mobileToggle.setAttribute('aria-expanded', 'false');
+});
+
+const gallery = document.querySelector('.history-track');
+if (gallery) {
+  const behavior = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+  document.querySelector('[data-gallery-prev]').addEventListener('click', () => gallery.scrollBy({ left: -gallery.clientWidth * .8, behavior }));
+  document.querySelector('[data-gallery-next]').addEventListener('click', () => gallery.scrollBy({ left: gallery.clientWidth * .8, behavior }));
+}
+
+const search = document.querySelector('#people-search');
+if (search) {
+  const rows = [...document.querySelectorAll('[data-person]')];
+  const count = document.querySelector('#archive-count');
+  const empty = document.querySelector('.empty-search');
+  const normalize = value => value.toLocaleLowerCase('ru').replaceAll('ё', 'е').trim();
+  search.addEventListener('input', () => {
+    const query = normalize(search.value); let visible = 0;
+    rows.forEach(row => { const match = normalize(row.dataset.person).includes(query); row.hidden = !match; if (match) visible++; });
+    count.textContent = query ? `Найдено: ${visible} из ${rows.length}` : `${rows.length} записей`;
+    empty.hidden = visible !== 0;
+  });
+}
+
+document.querySelectorAll('[data-year]').forEach(node => node.textContent = new Date().getFullYear());
