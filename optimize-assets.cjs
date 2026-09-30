@@ -9,7 +9,9 @@ const photos = [
   'process-01', 'process-02', 'process-03', 'process-04', 'sculpture-gesture',
   'sculpture-glasses', 'sculpture-light', 'studio', 'ilya-portrait', 'istukan',
   'moai-garden-black', 'moai-garden-stone', 'moai-gallery-blue', 'moai-freedom',
-  'moai-night-stone', 'moai-gold-interior'
+  'moai-night-stone', 'moai-gold-interior',
+  'night-01', 'night-02', 'night-03', 'night-04', 'night-05', 'night-06', 'night-07',
+  'night-08', 'night-09', 'night-10', 'night-11', 'night-12', 'night-13', 'night-14'
 ];
 
 async function run() {
