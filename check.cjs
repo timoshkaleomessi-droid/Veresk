@@ -24,8 +24,9 @@ const home = fs.readFileSync('dist/index.html', 'utf8');
 for (const required of [
   'Авторский слепок', 'С острова Пасхи — «МОАИ»', 'Баста', 'Сергей Шнуров', 'Иосиф Кобзон',
   'Первый показ — в ночной галерее Ильи Вереска на Рубинштейна', 'Ночная галерея VERESK',
-  'Истуканы «МОАИ»', 'Товары и услуги', 'data-menu="people"', 'data-menu="offers"'
+  'Истуканы «МОАИ»', 'Товары и услуги', 'data-menu="people"', 'Скульптуры на заказ', 'Герои проекта'
 ]) assert(home.includes(required), `index.html: missing annotation “${required}”`);
+assert(!home.includes('data-menu="offers"'), 'index.html: removed services menu remains');
 for (const removed of ['Парный и авторский слепок', 'Полина Осетинская', '>Связаться<', '>57 встреч в архиве<']) {
   assert(!home.includes(removed), `index.html: old annotation remains “${removed}”`);
 }

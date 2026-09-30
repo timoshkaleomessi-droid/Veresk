@@ -48,6 +48,20 @@ if (gallery) {
 }
 
 const search = document.querySelector('#people-search');
+document.querySelectorAll('[data-product-slider]').forEach(slider => {
+  const track = slider.querySelector('.product-slider-track');
+  const slides = [...track.children];
+  const counter = slider.querySelector('.product-slider-controls span');
+  const behavior = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+  const go = direction => track.scrollBy({ left: direction * track.clientWidth, behavior });
+  slider.querySelector('[data-product-prev]').addEventListener('click', () => go(-1));
+  slider.querySelector('[data-product-next]').addEventListener('click', () => go(1));
+  track.addEventListener('scroll', () => {
+    const current = Math.min(slides.length, Math.max(1, Math.round(track.scrollLeft / track.clientWidth) + 1));
+    counter.textContent = `${current} / ${slides.length}`;
+  }, { passive: true });
+});
+
 if (search) {
   const rows = [...document.querySelectorAll('[data-person]')];
   const count = document.querySelector('#archive-count');
