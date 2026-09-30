@@ -20,4 +20,17 @@ for (const person of people) { assert(peopleHtml.includes(person.name)); assert.
 const services = fs.readFileSync('dist/services.html', 'utf8');
 for (const id of ['individual', 'pair', 'child', 'family', 'custom', 'istukan']) assert(services.includes(`id="${id}"`));
 assert.equal((services.match(/class="product-card"/g) || []).length, 6);
-console.log('Checked 6 pages, 57 archive records, 6 services, local assets, anchors and document landmarks.');
+const home = fs.readFileSync('dist/index.html', 'utf8');
+for (const required of [
+  'Авторский слепок', 'С острова Пасхи — «МОАИ»', 'Баста', 'Сергей Шнуров', 'Иосиф Кобзон',
+  'Первый показ — в ночной галерее Ильи Вереска на Рубинштейна', 'Ночная галерея VERESK',
+  'Истуканы «МОАИ»', 'Товары и услуги', 'data-menu="people"', 'data-menu="offers"'
+]) assert(home.includes(required), `index.html: missing annotation “${required}”`);
+for (const removed of ['Парный и авторский слепок', 'Полина Осетинская', '>Связаться<', '>57 встреч в архиве<']) {
+  assert(!home.includes(removed), `index.html: old annotation remains “${removed}”`);
+}
+assert(!peopleHtml.includes('1/6'), 'people.html: old 1/6 badge remains');
+assert(fs.existsSync('dist/moai.html') && fs.existsSync('dist/night-gallery.html'));
+const app = fs.readFileSync('dist/app.js', 'utf8');
+for (const mode of ["'off'", "'soft'", "'3d'"]) assert(app.includes(mode), `app.js: missing ${mode} light mode`);
+console.log('Checked 6 pages, 57 people, 6 services, all requested annotations, rollback light modes, assets and anchors.');

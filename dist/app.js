@@ -62,3 +62,36 @@ if (search) {
 }
 
 document.querySelectorAll('[data-year]').forEach(node => node.textContent = new Date().getFullYear());
+
+const homeHero = document.querySelector('.home-hero');
+if (homeHero) {
+  const allowedLights = new Set(['off', 'soft', '3d']);
+  const requestedLight = new URLSearchParams(location.search).get('light');
+  const lightMode = allowedLights.has(requestedLight) ? requestedLight : '3d';
+  document.body.dataset.light = lightMode;
+
+  if (lightMode === '3d' && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let frame;
+    const setLightPosition = event => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const rect = homeHero.getBoundingClientRect();
+        const x = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+        const y = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
+        homeHero.style.setProperty('--light-x', `${(x - .5) * 54}px`);
+        homeHero.style.setProperty('--light-y', `${(y - .5) * 32}px`);
+        homeHero.style.setProperty('--beam-turn', `${(x - .5) * 4}deg`);
+        homeHero.style.setProperty('--art-x', `${(x - .5) * -10}px`);
+        homeHero.style.setProperty('--art-y', `${(y - .5) * -6}px`);
+      });
+    };
+    homeHero.addEventListener('pointermove', setLightPosition, { passive: true });
+    homeHero.addEventListener('pointerleave', () => {
+      homeHero.style.setProperty('--light-x', '0px');
+      homeHero.style.setProperty('--light-y', '0px');
+      homeHero.style.setProperty('--beam-turn', '0deg');
+      homeHero.style.setProperty('--art-x', '0px');
+      homeHero.style.setProperty('--art-y', '0px');
+    });
+  }
+}
