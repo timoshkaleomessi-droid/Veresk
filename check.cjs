@@ -1,6 +1,6 @@
 const fs = require('node:fs'), path = require('node:path'), assert = require('node:assert/strict');
 const people = JSON.parse(fs.readFileSync('dist/people.json', 'utf8'));
-const pages = ['index.html', 'history.html', 'services.html', 'people.html', 'moai.html', 'night-gallery.html'];
+const pages = ['index.html', 'history.html', 'services.html', 'people.html', 'moai.html', 'night-gallery.html', 'propose.html'];
 assert.equal(people.length, 57);
 for (const file of pages) {
   const html = fs.readFileSync(path.join('dist', file), 'utf8');
@@ -33,4 +33,6 @@ assert(!peopleHtml.includes('1/6'), 'people.html: old 1/6 badge remains');
 assert(fs.existsSync('dist/moai.html') && fs.existsSync('dist/night-gallery.html'));
 const app = fs.readFileSync('dist/app.js', 'utf8');
 for (const mode of ["'off'", "'soft'", "'3d'"]) assert(app.includes(mode), `app.js: missing ${mode} light mode`);
-console.log('Checked 6 pages, 57 people, 6 services, all requested annotations, rollback light modes, assets and anchors.');
+const proposal = fs.readFileSync('dist/propose.html', 'utf8');
+for (const required of ['Предложить проект', 'Прикрепить фото и материалы', 'proposal-form']) assert(proposal.includes(required));
+console.log('Checked 7 pages, 57 people, 6 services, proposal form, all requested annotations, rollback light modes, assets and anchors.');

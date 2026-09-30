@@ -95,3 +95,32 @@ if (homeHero) {
     });
   }
 }
+
+const proposalForm = document.querySelector('#proposal-form');
+if (proposalForm) {
+  const fileInput = document.querySelector('#proposal-files');
+  const fileStatus = document.querySelector('#file-status');
+  const result = document.querySelector('#proposal-result');
+  fileInput.addEventListener('change', () => {
+    const files = [...fileInput.files];
+    fileStatus.textContent = files.length ? files.map(file => file.name).join(' · ') : 'JPG, PNG или PDF · можно выбрать несколько файлов';
+  });
+  proposalForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    const data = new FormData(proposalForm);
+    const files = [...fileInput.files];
+    const text = `Предложение проекта для Ильи Вереска\n\nИмя: ${data.get('name')}\nКонтакт: ${data.get('contact')}\n\nИдея:\n${data.get('idea')}`;
+    const shareData = { title: 'Предложение проекта — VERESK', text, files };
+    try {
+      if (navigator.share && (!files.length || navigator.canShare?.(shareData))) {
+        await navigator.share(shareData);
+        result.textContent = 'Материалы готовы к отправке. Спасибо за вашу идею.';
+      } else {
+        location.href = `mailto:veresk1976@yandex.ru?subject=${encodeURIComponent('Предложение проекта — VERESK')}&body=${encodeURIComponent(text + (files.length ? '\n\nВыбраны файлы: ' + files.map(file => file.name).join(', ') + '. Пожалуйста, приложите их к письму.' : ''))}`;
+        result.textContent = files.length ? 'Письмо подготовлено. Приложите выбранные файлы перед отправкой.' : 'Письмо подготовлено в вашем почтовом приложении.';
+      }
+    } catch (error) {
+      if (error.name !== 'AbortError') result.textContent = 'Не удалось открыть отправку. Напишите Илье в Telegram или на veresk1976@yandex.ru.';
+    }
+  });
+}
