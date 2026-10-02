@@ -14,7 +14,7 @@ const photos = [
   'moai-garden-black', 'moai-garden-stone', 'moai-gallery-blue', 'moai-freedom',
   'moai-night-stone', 'moai-gold-interior', 'moai-loft-market', 'museum-sport', 'service-custom',
   'service-family-01', 'service-family-02', 'service-family-03', 'service-family-04',
-  'service-family-05', 'service-family-06', 'service-family-07', 'service-heart',
+  'service-family-05', 'service-family-06', 'service-family-07', 'service-heart', 'service-heart-feature',
   'night-01', 'night-02', 'night-03', 'night-04', 'night-05', 'night-06', 'night-07',
   'night-08', 'night-09', 'night-10', 'night-11', 'night-12', 'night-13', 'night-14',
   ...suppliedPhotos
