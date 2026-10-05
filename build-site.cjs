@@ -9,7 +9,7 @@ const image = (name, alt, options = {}) => {
   const loading = options.eager ? 'eager' : 'lazy';
   const priority = options.eager ? ' fetchpriority="high"' : '';
   const cls = options.className ? ` class="${options.className}"` : '';
-  return `<picture${cls}><img src="assets/${name}-720.webp" srcset="assets/${name}-720.webp 720w, assets/${name}-1440.webp 1440w" sizes="${options.sizes || '100vw'}" alt="${esc(alt)}" width="${options.width || 1440}" height="${options.height || 960}" loading="${loading}" decoding="async"${priority}></picture>`;
+  return `<picture${cls}><source type="image/avif" srcset="assets/${name}-360.avif 360w, assets/${name}-720.avif 720w, assets/${name}-1440.avif 1440w" sizes="${options.sizes || '100vw'}"><img src="assets/${name}-720.webp" srcset="assets/${name}-360.webp 360w, assets/${name}-720.webp 720w, assets/${name}-1440.webp 1440w" sizes="${options.sizes || '100vw'}" alt="${esc(alt)}" width="${options.width || 1440}" height="${options.height || 960}" loading="${loading}" decoding="async"${priority}></picture>`;
 };
 
 const nav = active => `<header class="site-header" data-open="">

@@ -19,3 +19,12 @@
 .collection-card,.moai-card,.author-card{border-radius:28px}
 @media(max-width:900px){.project-chronicle .chronicle-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){.product-slider{height:390px}.story-hero{padding-bottom:48px}.story-hero h1{font-size:3.35rem}.collection-card,.moai-card,.author-card{border-radius:22px}.project-chronicle .chronicle-grid{grid-template-columns:1fr;gap:14px}.chronicle-card--double .chronicle-media picture{height:360px}}
+/* Skip layout and paint work for sections that are still far below the viewport. */
+main > section:not(:first-child),
+main > header:not(:first-child),
+.chronicle-card,
+.night-photo-grid > figure {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 720px;
+}
+

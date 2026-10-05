@@ -30,8 +30,17 @@ async function run() {
     const source = name === 'meeting-02' && metadata.width > 100
       ? sharp(input).extract({ left: 0, top: 0, width: metadata.width - Math.min(80, Math.floor(metadata.width * .07)), height: metadata.height })
       : sharp(input);
-    await source.clone().rotate().resize({ width: 720, withoutEnlargement: true }).webp({ quality: 76, effort: 5 }).toFile(path.join(root, `${name}-720.webp`));
-    await source.clone().rotate().resize({ width: 1440, withoutEnlargement: true }).webp({ quality: 82, effort: 5 }).toFile(path.join(root, `${name}-1440.webp`));
+    const widths = [360, 720, 1440];
+    for (const width of widths) {
+      const webpQuality = width === 1440 ? 80 : width === 720 ? 74 : 70;
+      const avifQuality = width === 1440 ? 52 : width === 720 ? 48 : 44;
+      await source.clone().rotate().resize({ width, withoutEnlargement: true })
+        .webp({ quality: webpQuality, effort: 6 })
+        .toFile(path.join(root, `${name}-${width}.webp`));
+      await source.clone().rotate().resize({ width, withoutEnlargement: true })
+        .avif({ quality: avifQuality, effort: 5 })
+        .toFile(path.join(root, `${name}-${width}.avif`));
+    }
   }
   const publicLogoSource = path.join(root, 'veresk-hand-logo.png');
   const logoSource = fs.existsSync(publicLogoSource) ? publicLogoSource : path.join(originals, 'veresk-hand-logo.png');
