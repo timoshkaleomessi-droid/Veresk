@@ -63,6 +63,24 @@ body.menu-open .product-float{opacity:0;pointer-events:none;visibility:hidden}
   .home-people-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.home-person{border-radius:14px}.home-person-copy{left:12px;right:10px;bottom:11px}.home-person-copy strong{font-size:.88rem}
 }
 @media(prefers-reduced-motion:reduce){.home-person img{transition:none}}
+
+/* Loaded last on purpose: the opened mobile navigation must fully cover page art. */
+@media(max-width:760px){
+  .site-header.mobile-open{background:#303033;border-bottom-color:rgba(255,255,255,.12)}
+  .site-header.mobile-open .brand{color:#fff}
+  .site-header.mobile-open .brand img{filter:invert(1);opacity:.92}
+  .site-header.mobile-open .mobile-toggle span{background:#fff}
+  .site-header .mobile-menu{top:58px;bottom:0;height:auto;background:#303033;color:#fff;padding:28px 22px calc(34px + env(safe-area-inset-bottom));box-shadow:none}
+  .site-header .mobile-menu a{color:#fff;text-shadow:none}
+  .site-header .mobile-menu a:last-child{color:#8fc8ff}
+  .collection-card{min-height:450px}
+  .collection-card>picture{height:100%;margin:0}
+  .author-card>picture img{object-fit:contain;object-position:center bottom;transform:scale(1.14);transform-origin:center bottom}
+}
+
+.home-person-dots{position:absolute;z-index:3;top:10px;right:10px;display:flex;gap:4px}
+.home-person-dots i{width:14px;height:2px;background:rgba(255,255,255,.38);transition:width .2s,background .2s}
+.home-person-dots i.is-active{width:22px;background:#fff}
 /* Skip layout and paint work for sections that are still far below the viewport. */
 main > section:not(:first-child),
 main > header:not(:first-child),

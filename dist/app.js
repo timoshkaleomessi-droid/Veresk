@@ -120,7 +120,7 @@ if (!document.body.classList.contains('no-product-float')) {
     productTimer = setInterval(() => { productIndex = (productIndex + 1) % productItems.length; renderProduct(productIndex); }, 4200);
   };
   renderProduct(0);
-  setTimeout(() => widget.classList.add('is-visible'), 900);
+  widget.classList.add('is-visible');
   startProducts();
   widget.addEventListener('mouseenter', () => clearInterval(productTimer));
   widget.addEventListener('mouseleave', startProducts);
@@ -153,6 +153,30 @@ if (rotatingPerson && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     }, 180);
   }, 4800);
 }
+
+document.querySelectorAll('[data-person-cycle]').forEach((card, cardIndex) => {
+  const frames = card.dataset.personCycle.split('|');
+  if (frames.length < 2) return;
+  const image = card.querySelector('img');
+  const source = card.querySelector('source');
+  const dots = document.createElement('span');
+  dots.className = 'home-person-dots';
+  dots.setAttribute('aria-hidden', 'true');
+  dots.innerHTML = frames.map((_, index) => `<i class="${index === 0 ? 'is-active' : ''}"></i>`).join('');
+  card.append(dots);
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let frameIndex = 0;
+  setInterval(() => {
+    frameIndex = (frameIndex + 1) % frames.length;
+    card.classList.add('is-changing');
+    setTimeout(() => {
+      image.src = frames[frameIndex];
+      source.srcset = frames[frameIndex];
+      [...dots.children].forEach((dot, index) => dot.classList.toggle('is-active', index === frameIndex));
+      card.classList.remove('is-changing');
+    }, 180);
+  }, 3900 + cardIndex * 450);
+});
 
 const homeHero = document.querySelector('.home-hero');
 if (homeHero) {

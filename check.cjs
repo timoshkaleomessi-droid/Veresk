@@ -11,7 +11,7 @@ for (const file of pages) {
   for (const match of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
     const url = match[1];
     if (url.startsWith('#') && url !== '#') assert(ids.includes(url.slice(1)), `${file}: missing anchor ${url}`);
-    else if (!/^([a-z]+:|#)/i.test(url)) assert(fs.existsSync(path.join('dist', url.split('#')[0])), `${file}: missing ${url}`);
+    else if (!/^([a-z]+:|#)/i.test(url)) assert(fs.existsSync(path.join('dist', url.split(/[?#]/)[0])), `${file}: missing ${url}`);
   }
 }
 const peopleHtml = fs.readFileSync('dist/people.html', 'utf8');
