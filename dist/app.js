@@ -77,6 +77,57 @@ if (search) {
 
 document.querySelectorAll('[data-year]').forEach(node => node.textContent = new Date().getFullYear());
 
+const productItems = [
+  { number: '01', title: 'Индивидуальный слепок', image: 'assets/sculpture-gesture-360.avif', href: 'services.html#individual' },
+  { number: '02', title: 'Парный слепок', image: 'assets/service-pair-01-360.avif', href: 'services.html#pair' },
+  { number: '03', title: 'Детский слепок', image: 'assets/service-child-moon-360.avif', href: 'services.html#child' },
+  { number: '04', title: 'Семейная композиция', image: 'assets/service-family-01-360.avif', href: 'services.html#family' },
+  { number: '05', title: 'Авторский объект', image: 'assets/service-custom-360.avif', href: 'services.html#custom' },
+  { number: '06', title: 'Истуканы «МОАИ»', image: 'assets/istukan-360.avif', href: 'moai.html' }
+];
+
+if (!document.body.classList.contains('no-product-float')) {
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const widget = document.createElement('aside');
+  widget.className = 'product-float';
+  widget.setAttribute('aria-label', 'Товары и услуги VERESK');
+  widget.innerHTML = `<div class="product-float-media"><img width="360" height="360" decoding="async" alt=""></div><a class="product-float-copy" href="services.html"><span class="product-float-kicker"></span><strong class="product-float-title"></strong><span class="product-float-link">Посмотреть →</span></a><div class="product-float-progress" aria-hidden="true">${productItems.map(() => '<i></i>').join('')}</div>`;
+  document.body.append(widget);
+  const productImage = widget.querySelector('img');
+  const productLink = widget.querySelector('a');
+  const productKicker = widget.querySelector('.product-float-kicker');
+  const productTitle = widget.querySelector('.product-float-title');
+  const productSteps = [...widget.querySelectorAll('.product-float-progress i')];
+  let productIndex = 0;
+  let productTimer;
+  const renderProduct = index => {
+    const item = productItems[index];
+    widget.classList.add('is-changing');
+    setTimeout(() => {
+      productImage.src = item.image;
+      productImage.alt = item.title;
+      productLink.href = item.href;
+      productLink.setAttribute('aria-label', `${item.title}. Посмотреть`);
+      productKicker.textContent = `${item.number} · Товары и услуги`;
+      productTitle.textContent = item.title;
+      productSteps.forEach((step, stepIndex) => step.classList.toggle('is-active', stepIndex === index));
+      widget.classList.remove('is-changing');
+    }, productIndex === 0 ? 0 : 160);
+  };
+  const startProducts = () => {
+    if (reducedMotion) return;
+    clearInterval(productTimer);
+    productTimer = setInterval(() => { productIndex = (productIndex + 1) % productItems.length; renderProduct(productIndex); }, 4200);
+  };
+  renderProduct(0);
+  setTimeout(() => widget.classList.add('is-visible'), 900);
+  startProducts();
+  widget.addEventListener('mouseenter', () => clearInterval(productTimer));
+  widget.addEventListener('mouseleave', startProducts);
+  widget.addEventListener('focusin', () => clearInterval(productTimer));
+  widget.addEventListener('focusout', startProducts);
+}
+
 const homeHero = document.querySelector('.home-hero');
 if (homeHero) {
   const allowedLights = new Set(['off', 'soft', '3d']);
