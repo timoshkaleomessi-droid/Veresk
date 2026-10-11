@@ -128,6 +128,32 @@ if (!document.body.classList.contains('no-product-float')) {
   widget.addEventListener('focusout', startProducts);
 }
 
+const rotatingPerson = document.querySelector('[data-rotating-person]');
+if (rotatingPerson && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const people = [
+    { number: '04', name: 'Сергей Шнуров', image: 'assets/hands-25-360.avif' },
+    { number: '05', name: 'Иосиф Кобзон', image: 'assets/hands-13-360.avif' }
+  ];
+  const image = rotatingPerson.querySelector('img');
+  const source = rotatingPerson.querySelector('source');
+  const number = rotatingPerson.querySelector('span');
+  const name = rotatingPerson.querySelector('strong');
+  let index = 0;
+  setInterval(() => {
+    index = (index + 1) % people.length;
+    const person = people[index];
+    rotatingPerson.classList.add('is-changing');
+    setTimeout(() => {
+      image.src = person.image;
+      source.srcset = person.image;
+      image.alt = person.name;
+      number.textContent = `${person.number} · Архив встреч`;
+      name.textContent = person.name;
+      rotatingPerson.classList.remove('is-changing');
+    }, 180);
+  }, 4800);
+}
+
 const homeHero = document.querySelector('.home-hero');
 if (homeHero) {
   const allowedLights = new Set(['off', 'soft', '3d']);

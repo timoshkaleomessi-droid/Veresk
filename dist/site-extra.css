@@ -42,6 +42,27 @@ body.menu-open .product-float{opacity:0;pointer-events:none;visibility:hidden}
 }
 @media(max-width:390px){.project-chronicle .chronicle-media,.chronicle-card--double .chronicle-media picture{height:154px}}
 @media(prefers-reduced-motion:reduce){.product-float,.product-float-media img,.product-float-progress i{transition:none}}
+
+/* A compact editorial mosaic for notable meetings on the home page. */
+.home-people{padding-top:84px;padding-bottom:84px}
+.home-people-head{display:flex;align-items:end;justify-content:space-between;gap:32px;margin-bottom:28px}
+.home-people-head h2{max-width:650px;margin:0;font-size:clamp(2.35rem,4.8vw,4.4rem);line-height:.96;letter-spacing:-.055em}
+.home-people-head .secondary-link{flex:none}
+.home-people-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.home-person{position:relative;aspect-ratio:1;overflow:hidden;border-radius:18px;background:#171717;color:#fff;isolation:isolate}
+.home-person picture,.home-person img{display:block;width:100%;height:100%}
+.home-person img{object-fit:cover;transition:opacity .2s ease,transform .45s ease}
+.home-person::after{content:"";position:absolute;z-index:1;inset:38% 0 0;background:linear-gradient(transparent,rgba(0,0,0,.82))}
+.home-person-copy{position:absolute;z-index:2;left:16px;right:16px;bottom:15px}
+.home-person-copy span{display:block;margin-bottom:5px;color:#9ed0ff;font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.home-person-copy strong{display:block;font-size:1rem;line-height:1.08;letter-spacing:-.025em}
+.home-person:hover img{transform:scale(1.035)}
+.home-person.is-changing img{opacity:.28;transform:scale(1.035)}
+@media(max-width:760px){
+  .home-people{padding:54px 16px}.home-people-head{display:block;margin-bottom:22px}.home-people-head h2{font-size:2.25rem}.home-people-head .secondary-link{display:inline-block;margin-top:16px}
+  .home-people-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.home-person{border-radius:14px}.home-person-copy{left:12px;right:10px;bottom:11px}.home-person-copy strong{font-size:.88rem}
+}
+@media(prefers-reduced-motion:reduce){.home-person img{transition:none}}
 /* Skip layout and paint work for sections that are still far below the viewport. */
 main > section:not(:first-child),
 main > header:not(:first-child),
