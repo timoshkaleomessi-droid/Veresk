@@ -66,11 +66,11 @@ body.menu-open .product-float{opacity:0;pointer-events:none;visibility:hidden}
 
 /* Loaded last on purpose: the opened mobile navigation must fully cover page art. */
 @media(max-width:760px){
-  .site-header.mobile-open{background:#303033;border-bottom-color:rgba(255,255,255,.12)}
+  .site-header.mobile-open{position:fixed;inset:0;height:100dvh;overflow:hidden;background:#303033;border-bottom-color:rgba(255,255,255,.12)}
   .site-header.mobile-open .brand{color:#fff}
   .site-header.mobile-open .brand img{filter:invert(1);opacity:.92}
   .site-header.mobile-open .mobile-toggle span{background:#fff}
-  .site-header .mobile-menu{top:58px;bottom:0;height:auto;background:#303033;color:#fff;padding:28px 22px calc(34px + env(safe-area-inset-bottom));box-shadow:none}
+  .site-header .mobile-menu{position:absolute;top:58px;bottom:0;height:auto;background:#303033;color:#fff;padding:28px 22px calc(34px + env(safe-area-inset-bottom));box-shadow:none}
   .site-header .mobile-menu a{color:#fff;text-shadow:none}
   .site-header .mobile-menu a:last-child{color:#8fc8ff}
   .collection-card{min-height:450px}
